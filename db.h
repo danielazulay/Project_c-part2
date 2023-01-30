@@ -3,8 +3,8 @@
 
 #include "user.h"
 
-int create_db(char **line);
+int create_db(char **line,User **db,int *pti);
 int select2(char *line,char * newBuffer);
 void init_db();
-void printdb();
+
 #endif

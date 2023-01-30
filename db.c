@@ -3,20 +3,14 @@
 #include <stdio.h>
 #include "user.h"
 
-int pti;
-User *db;
-
-int insert_duplicate( User *user);
-int insert_new( User *user);
-int insert_db();
+int insert_duplicate(User *user, User **db, int *pti);
+int insert_new(User *user, User **db, int *pti);
+int insert_db(User **db, int *pti);
 int compare_dates(char *value, char *date, char *comp);
-void init_db();
+//void printdb(char *dbBuffer);
 
-
-
-int create_db(char **line)
+int create_db(char **line, User **db, int *pti)
 {
-
   User user;
 
   char *value = strtok(*line, ";");
@@ -60,31 +54,32 @@ int create_db(char **line)
     value = strtok(NULL, "; ");
     col++;
   }
-  if (pti == 0)
+  if (*pti == 0)
   {
-    db = malloc(sizeof(User));
-    db[pti] = user;
-    pti++;
+    (*db) = malloc(sizeof(User));
+    (*db)[*pti] = user;
+
+    (*pti)++;
   }
-  else if (insert_duplicate( &user))
+  else if (insert_duplicate(&user, &db, pti))
   {
     insert_db();
-    insert_new(&user);
-    pti++;
+    insert_new(&user, &db, pti);
+    (*pti)++;
   }
 
   return 0;
 }
 
-int insert_duplicate(User *user)
+int insert_duplicate(User *user, User **db, int *pti)
 {
 
-  for (int j = 0; j < pti; j++)
+  for (int j = 0; j < *pti; j++)
   {
 
-    if (db[j].idNumber == user->idNumber)
+    if ((*db)[j].idNumber == user->idNumber)
     {
-      db[j].debt += user->debt;
+      (*db)[j].debt += user->debt;
 
       return 0;
     }
@@ -92,58 +87,37 @@ int insert_duplicate(User *user)
   return 1;
 }
 
-int insert_new( User *user)
+int insert_new(User *user, User **db, int *pti)
 {
   int j;
 
-  for (j = 0; j < pti - 1; j++)
+  for (j = 0; j < *pti; j++)
   {
 
-    if (db[j].debt < user->debt)
+    if ((*db)[j].debt < user->debt)
     {
 
-      User aux = db[j];
-      db[j] = *user;
+      User aux = (*db)[j];
+      (*db)[j] = *user;
       *user = aux;
     }
   }
 
-  (db)[pti] = *user;
+  (*db)[*pti] = *user;
 
   return 0;
 }
 
-int insert_db()
+int insert_db(User **db, int *pti)
 {
-  int x = pti + 1;
-  db = realloc(db, x * sizeof(User));
+  int x = *pti + 1;
+  *db = realloc((*db), x * sizeof(User));
 
-  if (!db)
+  if (!*db)
   {
     printf("Error on realloc");
   }
   return 0;
-}
-
-void printdb()
-{
-  for (int k = 0; k < pti; k++)
-  {
-    printf("******Registre %d*******\n", k + 1);
-    puts("");
-    printf("First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[k].firstName, db[k].lastName, db[k].birth, db[k].idNumber, db[k].phone, db[k].debt, db[k].debt_date);
-
-    puts("********************\n");
-  }
-}
-
-void print_one(User *db)
-{
-  puts("");
-  printf("First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db->firstName, db->lastName, db->birth, db->idNumber, db->phone, db->debt, db->debt_date);
-  puts("");
-
-    
 }
 
 void free_all(User **db, int *i)
@@ -163,9 +137,8 @@ void free_all(User **db, int *i)
   puts("");
 };
 
-int select2(char *line ,char *newBuffer)
+int select2(char *line, char *newBuffer, User **db, int *pti)
 {
-
   char variable[50];
   char comp[50];
   char value[50];
@@ -194,48 +167,41 @@ int select2(char *line ,char *newBuffer)
     col++;
   }
 
-  
-
   if (!strcmp("birth", variable) && (!strcmp(">", comp) || !strcmp("<", comp)))
   {
     int flag = 0;
     for (int k = 0; k < pti; k++)
     {
 
-      if (compare_dates(value, db[k].birth, comp))
+      if (compare_dates(value, (*db)[k].birth, comp))
       {
         flag = 1;
-        User use = db[k];
-        print_one(&use);
+        snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
       }
     }
     if (flag == 0)
-      printf("%s %s %s not found \n", variable, comp, value);
+      snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
   }
   else if (!strcmp("debtdate", variable) && (!strcmp(">", comp) || !strcmp("<", comp)))
   {
 
     int flag = 0;
-    int i=0;
+
     for (int k = 0; k < pti; k++)
     {
 
-      if (compare_dates(value, db[k].debt_date, comp))
+      if (compare_dates(value, (*db)[k].debt_date, comp))
       {
- 
+
         flag = 1;
-        User use = db[k];
-        print_one(&use);
-       
-      
+        snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
       }
     }
-    if (flag == 0){
-      
-   printf("%s %s %s %d not found \n", variable, comp, value,pti);
+    if (flag == 0)
+    {
 
+      snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
     }
-
   }
   else if (!strcmp("firstname", variable) && !strcmp("=", comp))
   {
@@ -244,23 +210,18 @@ int select2(char *line ,char *newBuffer)
     for (int k = 0; k < pti; k++)
     {
 
-      if (!strcmp(db[k].firstName, value))
+      if (!strcmp((*db)[k].firstName, value))
       {
         flag = 1;
-        //User use = db[k];
-        //print_one(&use);
-        
-    snprintf(newBuffer,1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n",db[k].firstName, db[k].lastName, db[k].birth, db[k].idNumber, db[k].phone, db[k].debt, db[k].debt_date);
 
+        snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
       }
     }
-    if (flag == 0){
+    if (flag == 0)
+    {
 
-    snprintf(newBuffer, 1024,"%s %s %s not found \n", variable,comp, value );
-     // printf("%s %s %s %d not found \n", variable, comp, value,pti);
-   
+      snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
     }
-  
   }
   else if (!strcmp("lastname", variable))
   {
@@ -268,15 +229,14 @@ int select2(char *line ,char *newBuffer)
     for (int k = 0; k < pti; k++)
     {
 
-      if (!strcmp(db[k].lastName, value))
+      if (!strcmp((*db)[k].lastName, value))
       {
         flag = 1;
-        User use = db[k];
-        print_one(&use);
+        snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
       }
     }
     if (flag == 0)
-      printf("%s %s %s not found \n", variable, comp, value);
+      snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
   }
   else if (!strcmp("debt", variable))
   {
@@ -286,88 +246,79 @@ int select2(char *line ,char *newBuffer)
       int flag = 0;
       for (int k = 0; k < pti; k++)
       {
-        if (db[k].debt == atoi(value))
+        if ((*db)[k].debt == atoi(value))
         {
           flag = 1;
-          User use = db[k];
-          print_one(&use);
+          snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
         }
       }
       if (flag == 0)
-        printf("%s %s %s not found \n", variable, comp, value);
+        snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
     }
     else if (!strcmp("<", comp))
     {
       int flag = 0;
       for (int k = 0; k < pti; k++)
       {
-        if (db[k].debt < atoi(value))
+        if ((*db)[k].debt < atoi(value))
         {
           flag = 1;
-          User use = db[k];
-          print_one(&use);
+          snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
         }
       }
       if (flag == 0)
-        printf("%s %s %s not found \n", variable, comp, value);
+        snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
     }
     else if (!strcmp(">", comp))
     {
       int flag = 0;
       for (int k = 0; k < pti; k++)
       {
-        if (db[k].debt > atoi(value))
+        if ((*db)[k].debt > atoi(value))
         {
           flag = 1;
-          User use = db[k];
-          print_one(&use);
+          snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
         }
       }
       if (flag == 0)
-        printf("%s %s %s not found \n", variable, comp, value);
+        snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
     }
     else if (!strcmp(">=", comp))
     {
       int flag = 0;
       for (int k = 0; k < pti; k++)
       {
-        if (db[k].debt > atoi(value))
+        if ((*db)[k].debt > atoi(value))
         {
           flag = 1;
-          User use = db[k];
-          print_one(&use);
+          snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
         }
       }
       if (flag == 0)
-        printf("%s %s %s not found \n", variable, comp, value);
+        snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
     }
     else if (!strcmp("<=", comp))
     {
       int flag = 0;
       for (int k = 0; k < pti; k++)
       {
-        if (db[k].debt <= atoi(value))
+        if ((*db)[k].debt <= atoi(value))
         {
           flag = 1;
-          User use = db[k];
-          print_one(&use);
+          snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
         }
       }
       if (flag == 0)
-        printf("%s %s %s not found \n", variable, comp, value);
+        snprintf(newBuffer, 1024, "%s %s %s not found \n", variable, comp, value);
     }
   }
-
-
-   return 0;
+  return 0;
 }
 
 int compare_dates(char *value, char *date, char *comp)
 {
-
   char valuedate[10];
   strcpy(valuedate, value);
-
   for (int j = 0; j < 10; j++)
   {
     if (!strcmp("<", comp))
@@ -381,7 +332,6 @@ int compare_dates(char *value, char *date, char *comp)
         return 1;
       }
     }
-
     if (!strcmp(">", comp))
     {
       if (date[j] < valuedate[j])
@@ -394,12 +344,5 @@ int compare_dates(char *value, char *date, char *comp)
       }
     }
   }
-
   return 0;
 }
-
-
-void init_db(){
-pti=0;
-}
-

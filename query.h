@@ -4,7 +4,7 @@
 #include "user.h"
 
 
-int set(char *value);
+int set(char *value,char * newBuffer);
 int sel(char *line,char * newBuffer);
 
 

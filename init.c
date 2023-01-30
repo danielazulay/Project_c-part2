@@ -3,16 +3,10 @@
 #include <stdio.h>
 #include "validate.h"
 
-
-
-
 void free_all(User **db, int *pt_i);
-
 
 int main(int argc, char **argv)
 {
-
-
 
   char line[100];
 
@@ -22,28 +16,20 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  //FILE *file = fopen(argv[1], "r");
-FILE *file = fopen("arquivo.csv", "r");
+  // FILE *file = fopen(argv[1], "r");
+  FILE *file = fopen("arquivo.csv", "r");
   if (!file)
   {
     printf("Error: file %s does not exist.\n", argv[1]);
     return 1;
   }
 
-init_db();
+  init_db();
 
   while (fgets(line, sizeof(line), file))
   {
     check_data(line);
-    
   }
-  printdb();
 
   fclose(file);
-
 }
-
-
-
-
-

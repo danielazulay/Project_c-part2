@@ -10,9 +10,9 @@
 
 int main(int argc, char **argv)
 {
-    int sockfd[5];
+    int sockfd[1];
     struct sockaddr_in servaddr;
-    char buffer[5][MAX_LEN];
+    char buffer[1][MAX_LEN];
     int n;
     int i;
 
@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     while (1)
     {
         /* Create a sockets */
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 1; i++)
         {
             sockfd[i] = socket(AF_INET, SOCK_STREAM, 0);
             if (sockfd[i] < 0)
@@ -48,12 +48,15 @@ int main(int argc, char **argv)
         }
 
         puts("Enter a 5 messages:");
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 1; i++)
         {
             fgets(buffer[i], MAX_LEN, stdin);
         }
+         if(!strcmp(buffer[i],"exit")){
+        return 0;
+       }
 
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < 1; i++)
         {
             n = send(sockfd[i], buffer[i], strlen(buffer[i]) - 1, 0);
             if (n < 0)
@@ -63,8 +66,8 @@ int main(int argc, char **argv)
             }
         }
 
-        for (i = 0; i < 5; i++)
-        {
+        for (i = 0; i < 1; i++)
+      {
             n = recv(sockfd[i], buffer[i], MAX_LEN, 0);
             if (n < 0)
             {
@@ -75,7 +78,9 @@ int main(int argc, char **argv)
             printf("Client %d received: %s\n", i, buffer[i]);
 
             close(sockfd[i]);
-        }
+       }
+
+      
     }
 
     return 0;

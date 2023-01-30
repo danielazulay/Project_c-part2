@@ -35,19 +35,20 @@ int sel(char *line,char *newBuffer)
     }
   }
 
-    sprintf(reply, "%s;%s;%s", variable,comp, value);
+    sprintf(reply,"%s;%s;%s", variable,comp, value);
 
 
    
 
    
  select2(reply,newBuffer);
+
  return 0;
 }
 
-int set(char *value)
+int set(char *value,char *newBuffer,char *erroBuffer)
 {
-
+  
   char line[1024] = {0};
 
   char str[1024];
@@ -68,6 +69,6 @@ int set(char *value)
 
   snprintf(line, 6 * sizeof(arr), "%s;%s;%s;%s;%s;%s;%s", arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
 
-  check_data(line);
+  check_data(line,newBuffer);
   return 1;
 }
