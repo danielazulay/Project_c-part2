@@ -4,7 +4,7 @@
 #include "user.h"
 
 int create_db(char **line,User **db,int *pti);
-int select2(char *line,char * newBuffer);
-void init_db();
+int select2(char *line,char * newBuffer,User **db,int *pti);
+
 
 #endif

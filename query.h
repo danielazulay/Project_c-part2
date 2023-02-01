@@ -4,8 +4,8 @@
 #include "user.h"
 
 
-int set(char *value,char * newBuffer);
-int sel(char *line,char * newBuffer);
+int set(char *value,char * newBuffer,User**db,int *pti);
+int sel(char *line,char * newBuffer,User**db,int *pti);
 
 
 #endif

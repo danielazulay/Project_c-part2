@@ -5,7 +5,7 @@
 #include "db.h"
 #include "validate.h"
 
-int sel(char *line,char *newBuffer)
+int sel(char *line,char *newBuffer, User **db, int *pti)
 {
 
   char reply[1024] = {0};
@@ -41,12 +41,12 @@ int sel(char *line,char *newBuffer)
    
 
    
- select2(reply,newBuffer);
+ select2(reply,newBuffer,db,pti);
 
  return 0;
 }
 
-int set(char *value,char *newBuffer,char *erroBuffer)
+int set(char *value,char *newBuffer,User **db,int * pti)
 {
   
   char line[1024] = {0};
@@ -69,6 +69,6 @@ int set(char *value,char *newBuffer,char *erroBuffer)
 
   snprintf(line, 6 * sizeof(arr), "%s;%s;%s;%s;%s;%s;%s", arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
 
-  check_data(line,newBuffer);
+  check_data(line,newBuffer,db,pti);
   return 1;
 }

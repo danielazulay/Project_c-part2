@@ -15,11 +15,10 @@ User *db;
 
 void *conn_handler(void *args)
 {
-    char buffer[MAX_LEN];
-    char newBuffer[MAX_LEN];
+    char buffer[MAX_LEN] = {0};
+    char newBuffer[MAX_LEN] = {0};
     int n;
     int new_sock = (int)args;
-    
 
     n = recv(new_sock, buffer, MAX_LEN, 0);
     if (n < 0)
@@ -28,31 +27,46 @@ void *conn_handler(void *args)
         goto exit;
     }
     buffer[n] = '\0';
-    if (!strstr(buffer, "select"))
+
+    printf("Server received: %s\n", buffer);
+    char *vr[] = {"select", "set", "print", "exit"};
+    char str2[20];
+    for (int i = 0; i < 4; i++)
     {
-       
-        sel(buffer, newBuffer);
+        if (strstr(buffer, vr[i]))
+        {
+            strcpy(str2, vr[i]);
+            break;
+        }
     }
-    else if (!strstr(buffer, "set"))
+
+    if (!strcmp(str2, "select"))
     {
-        set(buffer, newBuffer);
+        sel(buffer, newBuffer, &db, &pti);
     }
-   /*  else if (strstr(buffer, "print"))
-    {    
-      
-        for(int i=1;i<pti;i++){
-        snprintf(newBuffer, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
-   
-        } */
-        
-     
+    else if (strstr(str2, "set"))
+    {
+        set(buffer, newBuffer, &db, &pti);
+    }
+    else if (!strcmp(buffer, "print"))
+    {
 
+        int x;
+        int size = 0;
+        for (int i = 0; i < pti; i++)
+        {
 
-    printf("Server received: %s\n", newBuffer);
+            x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
 
-
- n = send(new_sock, newBuffer, strlen(newBuffer), 0);
-     if (n < 0)
+            size += x;
+        }
+    }
+    else if (!strcmp(buffer, "exit"))
+    {
+        goto exit;
+    }
+    n = send(new_sock, newBuffer, strlen(newBuffer), 0);
+    if (n < 0)
     {
         perror("Server error sending data");
         goto exit;
@@ -70,30 +84,28 @@ int main(int argc, char **argv)
     int sockfd;
     struct sockaddr_in servaddr, cliaddr;
     socklen_t len = sizeof(cliaddr);
-
     if (argc < 2)
     {
         printf("Usage: %s <port>\n", argv[0]);
         return 1;
     }
 
-    FILE *file = fopen(argv[1], "r");
+    FILE *file = fopen("arquivo.csv", "r");
 
     if (!file)
     {
         printf("Error: file %s does not exist.\n", argv[1]);
         return 1;
     }
-
+   
     while (fgets(line, sizeof(line), file))
     {
-        check_data(line, dbbuffer, &db, pti);
+        check_data(line, dbbuffer, &db, &pti);
+       
     }
-
-
+   
     fclose(file);
 
-    /* Create a socket */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
     {
@@ -112,23 +124,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (listen(sockfd, 1) < 0)
+    if (listen(sockfd, 5) < 0)
     {
         perror("Error listenning");
         return 1;
     }
-
-    char line[100];
-    FILE *file = fopen("arquivo.csv", "r");
-    if (file)
-    {
-        while (fgets(line, sizeof(line), file))
-        {
-            check_data(line, dbbuffer,&db,pti);
-        }
-    }
-
-    fclose(file);
 
     /* Receive data from clients */
     while (1)
