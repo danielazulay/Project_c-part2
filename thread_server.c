@@ -103,6 +103,7 @@ int main(int argc, char **argv)
         check_data(line, dbbuffer, &db, &pti);
        
     }
+    printf("%s",dbbuffer);
    
     fclose(file);
 
@@ -111,6 +112,11 @@ int main(int argc, char **argv)
     {
         perror("Error creating socket");
         return 1;
+    }
+
+    for(int i=0;i<pti;i++){
+
+        printf("First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
     }
 
     /* Bind the socket to a specific port */

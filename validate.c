@@ -16,6 +16,8 @@ int check_data(char *line, char *dbBuffer, User **db, int *pti)
     char *line2 = strdup(line);
 
     char *value = strtok(line, ";");
+    int x;
+    int size =0;
 
     while (value)
     {
@@ -25,7 +27,8 @@ int check_data(char *line, char *dbBuffer, User **db, int *pti)
             if (check_date(value))
             {
                 flag = 0;
-                snprintf(dbBuffer, 1024, " invalid birth date->>  %s \n", line2);
+             x=   snprintf(dbBuffer+size, 1024, " invalid birth date->>  %s \n", line2);
+             size+=x;
             }
         }
 
@@ -34,7 +37,8 @@ int check_data(char *line, char *dbBuffer, User **db, int *pti)
             if (count_digit(value) != 9)
             {
                 flag = 0;
-                snprintf(dbBuffer, 1024, " invalid Id number->>  %s \n", line2);
+               x=snprintf(dbBuffer+size, 1024, " invalid Id number->>  %s \n", line2);
+               size+=x;
             }
         }
         if (col == 4)
@@ -47,13 +51,15 @@ int check_data(char *line, char *dbBuffer, User **db, int *pti)
                 if (count_digit(value) != 9)
                 {
                     flag = 0;
-                    snprintf(dbBuffer, 1024, " invalid phone number->>  %s \n", line2);
+                   x= snprintf(dbBuffer+size, 1024, " invalid phone number->>  %s \n", line2);
+                   size+=x;
                 }
             }
             else if (count_digit(value) != 10)
             {
                 flag = 0;
-                snprintf(dbBuffer, 1024, " invalid phone number->>  %s \n", line2);
+               x= snprintf(dbBuffer+size, 1024, " invalid phone number->>  %s \n", line2);
+               size+=x;
             }
         }
         if (col == 6)
@@ -61,7 +67,8 @@ int check_data(char *line, char *dbBuffer, User **db, int *pti)
             if (check_date(value))
             {
                 flag = 0;
-                snprintf(dbBuffer, 1024, " invalid debt date->>  %s \n", line2);
+                x=snprintf(dbBuffer+size, 1024, " invalid debt date->>  %s \n", line2);
+                size+=x;
             }
         }
 
