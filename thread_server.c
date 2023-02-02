@@ -97,14 +97,13 @@ int main(int argc, char **argv)
         printf("Error: file %s does not exist.\n", argv[1]);
         return 1;
     }
-   
+
     while (fgets(line, sizeof(line), file))
     {
         check_data(line, dbbuffer, &db, &pti);
-       
     }
-    printf("%s",dbbuffer);
-   
+    printf("%s", dbbuffer);
+
     fclose(file);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -114,7 +113,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    for(int i=0;i<pti;i++){
+    for (int i = 0; i < pti; i++)
+    {
 
         printf("First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
     }

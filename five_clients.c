@@ -40,7 +40,7 @@ int main(int argc, char **argv)
                 perror("Error creating socket");
                 return 1;
             }
-            if (connect(sockfd[i], (struct sockaddr *) &servaddr, sizeof(servaddr)) < 0)
+            if (connect(sockfd[i], (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
             {
                 perror("Error connecting");
                 return 1;

@@ -5,11 +5,12 @@
 #include "db.h"
 #include "validate.h"
 
-int sel(char *line,char *newBuffer, User **db, int *pti)
+int sel(char *line, char *newBuffer, User **db, int *pti)
 {
 
   char reply[1024] = {0};
   char str[1024] = {0};
+
   strcpy(str, line);
 
   char *point;
@@ -35,20 +36,18 @@ int sel(char *line,char *newBuffer, User **db, int *pti)
     }
   }
 
-    sprintf(reply,"%s;%s;%s", variable,comp, value);
+  sprintf(reply, "%s;%s;%s", variable, comp, value);
 
+  tolowercase(reply);
 
-   
+  select2(reply, newBuffer, db, pti);
 
-   
- select2(reply,newBuffer,db,pti);
-
- return 0;
+  return 0;
 }
 
-int set(char *value,char *newBuffer,User **db,int * pti)
+int set(char *value, char *newBuffer, User **db, int *pti)
 {
-  
+
   char line[1024] = {0};
 
   char str[1024];
@@ -69,6 +68,6 @@ int set(char *value,char *newBuffer,User **db,int * pti)
 
   snprintf(line, 6 * sizeof(arr), "%s;%s;%s;%s;%s;%s;%s", arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
 
-  check_data(line,newBuffer,db,pti);
+  check_data(line, newBuffer, db, pti);
   return 1;
 }
