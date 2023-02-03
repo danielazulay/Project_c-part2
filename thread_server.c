@@ -69,16 +69,16 @@ void *conn_handler(void *args)
     }
 
     n = send(new_sock, newBuffer, strlen(newBuffer), 0);
-    if (n < 0)
+ if (n < 0)
     {
         perror("Server error sending data");
         goto exit;
     }
 exit:
-
     close(new_sock);
     return NULL;
 }
+
 
 int main(int argc, char **argv)
 {
