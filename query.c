@@ -5,7 +5,7 @@
 #include "db.h"
 #include "validate.h"
 
-int sel(char *line, char *newBuffer, User **db, int *pti, int *size)
+int sel(char *line, char *newBuffer, User **db, int *pti)
 {
 
   char reply[1024] = {0};
@@ -40,7 +40,7 @@ int sel(char *line, char *newBuffer, User **db, int *pti, int *size)
 
   tolowercase(reply);
 
-  select2(reply, newBuffer, db, pti, size);
+  select2(reply, newBuffer, db, pti);
 
   return 0;
 }

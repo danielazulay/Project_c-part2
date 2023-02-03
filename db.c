@@ -137,11 +137,13 @@ void free_all(User **db, int *i)
   puts("");
 };
 
-int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
+int select2(char *line, char *newBuffer, User **db, int *pti)
 {
   char variable[50];
   char comp[50];
   char value[50];
+
+  int size = 0;
 
   int col = 0;
   char *val = strtok(line, ";");
@@ -170,28 +172,28 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
   if (!strcmp("birth", variable) && (!strcmp(">", comp) || !strcmp("<", comp)))
   {
     int flag = 0;
-
+    int x;
     for (int k = 0; k < *pti; k++)
     {
 
       if (compare_dates(value, (*db)[k].birth, comp))
       {
-        int x;
+
         flag = 1;
-        x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-        *size += x;
+        x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+        size += x;
       }
     }
     if (flag == 0)
     {
-      int x;
-      x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-      *size += x;
+
+      x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+      size += x;
     }
   }
   else if (!strcmp("debtdate", variable) && (!strcmp(">", comp) || !strcmp("<", comp)))
   {
-
+    int x;
     int flag = 0;
 
     for (int k = 0; k < *pti; k++)
@@ -199,21 +201,22 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
 
       if (compare_dates(value, (*db)[k].debt_date, comp))
       {
-        int x;
+
         flag = 1;
-        x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-        *size += x;
+        x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+        size += x;
       }
     }
     if (flag == 0)
     {
-      int x;
-      x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-      *size += x;
+
+      x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+      size += x;
     }
   }
   else if (!strcmp("firstname", variable) && !strcmp("=", comp))
   {
+    int x;
     int flag = 0;
 
     for (int k = 0; k < *pti; k++)
@@ -222,20 +225,21 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
       if (!strcmp((*db)[k].firstName, value))
       {
         flag = 1;
-        int x;
-        x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-        *size += x;
+
+        x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+        size += x;
       }
     }
     if (flag == 0)
     {
-      int x;
-      x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-      *size += x;
+
+      x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+      size += x;
     }
   }
-  else if (!strcmp("lastname", variable))
+  else if (!strcmp("lastname", variable) && !strcmp("=", comp))
   {
+    int x;
     int flag = 0;
 
     for (int k = 0; k < *pti; k++)
@@ -243,21 +247,22 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
 
       if (!strcmp((*db)[k].lastName, value))
       {
-        int x;
+
         flag = 1;
-        x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-        *size += x;
+        x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+        size += x;
       }
     }
     if (flag == 0)
     {
-      int x;
-      x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-      *size += x;
+
+      x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+      size += x;
     }
   }
   else if (!strcmp("debt", variable))
   {
+    int x;
 
     if (!strcmp("=", comp))
     {
@@ -267,17 +272,17 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
       {
         if ((*db)[k].debt == atoi(value))
         {
-          int x;
+
           flag = 1;
-          x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-          *size += x;
+          x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+          size += x;
         }
       }
       if (flag == 0)
       {
-        int x;
-        x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-        *size += x;
+
+        x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+        size += x;
       }
     }
     else if (!strcmp("<", comp))
@@ -288,17 +293,17 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
       {
         if ((*db)[k].debt < atoi(value))
         {
-          int x;
+
           flag = 1;
-          x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-          *size += x;
+          x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+          size += x;
         }
       }
       if (flag == 0)
       {
-        int x;
-        x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-        *size += x;
+
+        x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+        size += x;
       }
     }
     else if (!strcmp(">", comp))
@@ -309,17 +314,17 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
       {
         if ((*db)[k].debt > atoi(value))
         {
-          int x;
+
           flag = 1;
-          x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-          *size += x;
+          x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+          size += x;
         }
       }
       if (flag == 0)
       {
-        int x;
-        x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-        *size += x;
+
+        x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+        size += x;
       }
     }
     else if (!strcmp(">=", comp))
@@ -330,17 +335,17 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
       {
         if ((*db)[k].debt > atoi(value))
         {
-          int x;
+
           flag = 1;
-          x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-          *size += x;
+          x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+          size += x;
         }
       }
       if (flag == 0)
       {
-        int x;
-        x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-        *size += x;
+
+        x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+        size += x;
       }
     }
     else if (!strcmp("<=", comp))
@@ -350,17 +355,17 @@ int select2(char *line, char *newBuffer, User **db, int *pti, int *size)
       {
         if ((*db)[k].debt <= atoi(value))
         {
-          int x;
+
           flag = 1;
-          x = snprintf(newBuffer + *size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
-          *size += x;
+          x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", (*db)[k].firstName, (*db)[k].lastName, (*db)[k].birth, (*db)[k].idNumber, (*db)[k].phone, (*db)[k].debt, (*db)[k].debt_date);
+          size += x;
         }
       }
       if (flag == 0)
       {
-        int x;
-        x = snprintf(newBuffer + *size, 1024, "%s %s %s not found \n", variable, comp, value);
-        *size += x;
+
+        x = snprintf(newBuffer + size, 1024, "%s %s %s not found \n", variable, comp, value);
+        size += x;
       }
     }
   }

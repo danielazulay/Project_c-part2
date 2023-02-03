@@ -31,7 +31,6 @@ void *conn_handler(void *args)
     printf("Server received: %s\n", buffer);
     char *vr[] = {"select", "set", "print", "exit"};
     char str2[20];
-    int sizei = 0;
 
     for (int i = 0; i < 4; i++)
     {
@@ -44,19 +43,22 @@ void *conn_handler(void *args)
 
     if (!strcmp(str2, "select"))
     {
-        sel(buffer, newBuffer, &db, &pti, &sizei);
+
+        sel(buffer, newBuffer, &db, &pti);
     }
     else if (strstr(str2, "set"))
     {
-        set(buffer, newBuffer, &db, &pti, &sizei);
+        int size = 0;
+        set(buffer, newBuffer, &db, &pti, &size);
     }
     else if (!strcmp(buffer, "print"))
     {
 
+        int sizei = 0;
         for (int i = 0; i < pti; i++)
         {
-            int x;
-            x = snprintf(newBuffer + sizei, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
+
+            int x = snprintf(newBuffer + sizei, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
 
             sizei += x;
         }
@@ -65,17 +67,17 @@ void *conn_handler(void *args)
     {
         goto exit;
     }
+
     n = send(new_sock, newBuffer, strlen(newBuffer), 0);
     if (n < 0)
     {
         perror("Server error sending data");
         goto exit;
     }
-
 exit:
-    free_all(&db);
+
     close(new_sock);
-    return 0;
+    return NULL;
 }
 
 int main(int argc, char **argv)
