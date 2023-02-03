@@ -31,6 +31,8 @@ void *conn_handler(void *args)
     printf("Server received: %s\n", buffer);
     char *vr[] = {"select", "set", "print", "exit"};
     char str2[20];
+    int sizei = 0;
+
     for (int i = 0; i < 4; i++)
     {
         if (strstr(buffer, vr[i]))
@@ -42,23 +44,21 @@ void *conn_handler(void *args)
 
     if (!strcmp(str2, "select"))
     {
-        sel(buffer, newBuffer, &db, &pti);
+        sel(buffer, newBuffer, &db, &pti, &sizei);
     }
     else if (strstr(str2, "set"))
     {
-        set(buffer, newBuffer, &db, &pti);
+        set(buffer, newBuffer, &db, &pti, &sizei);
     }
     else if (!strcmp(buffer, "print"))
     {
 
-        int x;
-        int size = 0;
         for (int i = 0; i < pti; i++)
         {
+            int x;
+            x = snprintf(newBuffer + sizei, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
 
-            x = snprintf(newBuffer + size, 1024, "First Name: %s Last Name: %s birth: %s Id Number: %d Phonne Number: %d Debt: %.2f Debt Date: %s \n", db[i].firstName, db[i].lastName, db[i].birth, db[i].idNumber, db[i].phone, db[i].debt, db[i].debt_date);
-
-            size += x;
+            sizei += x;
         }
     }
     else if (!strcmp(buffer, "exit"))
@@ -73,6 +73,7 @@ void *conn_handler(void *args)
     }
 
 exit:
+    free_all(&db);
     close(new_sock);
     return 0;
 }
@@ -98,9 +99,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    int size = 0;
+
     while (fgets(line, sizeof(line), file))
     {
-        check_data(line, dbbuffer, &db, &pti);
+        check_data(line, dbbuffer, &db, &pti, &size);
     }
     printf("%s", dbbuffer);
 

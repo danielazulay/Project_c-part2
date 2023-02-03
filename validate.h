@@ -3,7 +3,7 @@
 
 #include "user.h"
 
-int check_data(char *line,char *dbBuffer,User ** db,int * pti);
+int check_data(char *line,char *dbBuffer,User ** db,int * pti,int *size);
 
 
 #endif
