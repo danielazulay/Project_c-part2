@@ -80,6 +80,9 @@ int insert_duplicate(User *user, User **db, int *pti)
     if ((*db)[j].idNumber == user->idNumber)
     {
       (*db)[j].debt += user->debt;
+      if((*db)[j].debt_date < user->debt_date){
+        (*db)[j].debt_date =user->debt_date;
+      }
 
       return 0;
     }
