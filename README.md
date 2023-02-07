@@ -3,30 +3,8 @@
 Project of C
 
 
-  _ _ _ _ _ _ _ _                             _ _ _ _ _ _ _                            _ _ _ _ _ _ _ _ 
-|                 |                          |             |                          |                |
-|                 |                          |             |                          |                |
-|  Five_client.c  |                          |   query.c   |_ _ _ _ _ _ _ _ _ _ _ _ _ |      db.c      |
-|                 |                          |             |                          |                |
-|_ _ _ _ _ _ _ _ _\                          |_ _ _ _ _ _ _|                          |_ _ _ _ _ _ _ _ |     
-                   \                         /             \                         /
-                    \                       /               \                       /
-                     \                     /                  \                    /
-                      \_ _ _ _ _ _ _ _ _  /                    \ _ _ _ _ _ _ _ _ _/
-                       |                  |                     |                 |
-                       |                  | _ _ _ _ _ _ _ _ _ _ |                 |
-                       |  thread_server.c |                     |    validate.c   |
-                       |                  |                     |                 |
-                       |_ _ _ _ _ _ _ _ _ |                     |_ _ _ _ _ _ _ _ _|
-                                           \
-                                            \
-                                             \_ _ _ _ _ _ _ _ _ 
-                                             |                  |
-                                             |                  |
-                                             |    file.c        |
-                                             |                  |
-                                             |_ _ _ _ _ _ _ _ _ |
-
+  
+![01](https://user-images.githubusercontent.com/28409805/217214370-f7713974-5961-4554-8127-5611272e9971.jpg)
 
 
 
@@ -41,7 +19,7 @@ to run the the application
 the application init.c read the lines on file .csv and send to the validate.c file.
 The validate.c check for date mistake ,the rigth format for date is yyyy/mmm/dd, check the size of id of 9 digist and the phone number of 10 digits.
 If there is any problem he reject the insertion and send a message error with the field containing the mistake. 
-After the file been check , he send the data to db , where he save the in the array of struct. 
+After the file been check , he send the data to db , where he save it in on the array of struct. 
 After he save the application, it open the console to make a select an set , the right format to do the select is:
 select field = value
 
